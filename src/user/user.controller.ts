@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
+    constructor(private readonly usersService: UserService){}
     /* 
        GET /users
        GET /users/:id
@@ -13,7 +14,7 @@ export class UserController {
 
        @Get() //GET /users or /users?role=value
        findAll(@Query('role') role?: 'INTERN' | 'ADMIN' | 'ENGINEER'){
-          return[]
+          return this.usersService.findAll(role)
        }
        
        @Get('interns')
@@ -23,22 +24,22 @@ export class UserController {
 
        @Get(':id')// GET /users/:id
        findOne(@Param('id') id: string){
-           return {id}
+           return this.usersService.findOne(+id) //+ is a uniary plus is used to convert stuff to a number
        }
 
        @Post()
-       create(@Body() user:{}){
-         return user
+       create(@Body() user:{name: string, email: string, role: 'INTERN' | 'ADMIN' | 'ENGINEER'}){
+         return this.usersService.create(user)
        }
 
         @Patch(':id')
-        update(@Param('id') id: string, @Body() userUpdate: {}){
-           return {id, ...userUpdate}
+        update(@Param('id') id: string, @Body() userUpdate: {name?: string, email?: string, role?: 'INTERN' | 'ADMIN' | 'ENGINEER'}){
+           return this.usersService.update(+id, userUpdate)
        }
 
         @Delete(':id')
          delete(@Param('id') id: string){
-           return {id}
+           return this.usersService.delete(+id)
        }
 
 }
