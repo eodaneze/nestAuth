@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, ParseIntPipe} from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -23,8 +23,9 @@ export class UserController {
        }
 
        @Get(':id')// GET /users/:id
-       findOne(@Param('id') id: string){
-           return this.usersService.findOne(+id) //+ is a uniary plus is used to convert stuff to a number
+       findOne(@Param('id', ParseIntPipe) id: number){
+        //    return this.usersService.findOne(+id) //+ is a uniary plus is used to convert stuff to a number
+            return this.usersService.findOne(id)
        }
 
        @Post()
@@ -33,13 +34,13 @@ export class UserController {
        }
 
         @Patch(':id')
-        update(@Param('id') id: string, @Body() userUpdate: {name?: string, email?: string, role?: 'INTERN' | 'ADMIN' | 'ENGINEER'}){
-           return this.usersService.update(+id, userUpdate)
+        update(@Param('id', ParseIntPipe) id: number, @Body() userUpdate: {name?: string, email?: string, role?: 'INTERN' | 'ADMIN' | 'ENGINEER'}){
+           return this.usersService.update(id, userUpdate)
        }
 
         @Delete(':id')
-         delete(@Param('id') id: string){
-           return this.usersService.delete(+id)
+         delete(@Param('id', ParseIntPipe) id: number){
+           return this.usersService.delete(id)
        }
 
 }
